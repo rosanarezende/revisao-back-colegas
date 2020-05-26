@@ -8,7 +8,7 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-app.use("/", userRouter)
+app.use("/user/", userRouter)
 app.use("/friendship/", friendshipRouter)
 
 // //testando o servidor
