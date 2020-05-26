@@ -17,4 +17,18 @@ export class UserBusiness{
         return { id: id }
     }
 
+    public async login(email: string, password: string) {
+
+        const userDatabase = new UserDatabase()
+        const user = await userDatabase.getUserByEmail(email)
+
+        const hashManager = new HashManager()
+        const comparePassword = await hashManager.compare(password, user.password)
+
+        if(!comparePassword) {
+            throw new Error ("Parâmetro incorreto")
+        }
+
+        return {id: user.id}
+    }
 }
