@@ -30,4 +30,30 @@ export class FriendshipController {
       res.status(400).send({ message: err.message})
     }
   }
+  async undoFriendship(req: Request, res: Response){
+    try{
+      const token = req.headers.authorization!;
+      const userUndoFriendship = req.body.id;
+
+      const idUser = new Authenticator().verify(token).id;
+
+      const friendships = await new FriendshipDatabase().getFriendshipById(idUser)
+
+      const userRelation = friendships.find(relation => {
+        return relation.user_id === userUndoFriendship || relation.user_to_make_friendship_id === userUndoFriendship;
+      })
+
+      if (!userRelation) {
+        throw new Error("Você não tem amizade com esse usuário.")
+      }
+
+      await new FriendshipBusiness().undoFriendship(idUser, userUndoFriendship)
+
+      res.status(200).send({ message: "Você desfez a amizade."})
+
+    }catch(err){
+      res.status(400).send({ message: err.message}) 
+    }
+  }
+
 }

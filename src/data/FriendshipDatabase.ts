@@ -21,5 +21,18 @@ export class FriendshipDatabase extends BaseDatabase {
         user_to_make_friendship_id: id
       })
   }
-  
+
+  public async undoFriendship(userId: string, userUndoFriendship: string): Promise<void> {
+    await super.connection()
+    .delete()
+    .from(FriendshipDatabase.TABLE_NAME)
+    .where({
+      user_id: userId,
+      user_to_make_friendship_id: userUndoFriendship
+    })
+    .orWhere({
+      user_id: userUndoFriendship,
+      user_to_make_friendship_id: userId
+    })
+  }
 }
